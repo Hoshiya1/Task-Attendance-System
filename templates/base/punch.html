@@ -1,0 +1,114 @@
+
+<!doctype html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- 上述meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/base/css/punch.css">
+    
+    <title>打卡</title>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="col">
+            <!-- <a href="/login/logout/" class="text-success " ><ins>退出</ins></a><br> -->
+            
+            <h3 class="float-right text-primary">{{ request.session.name }}</h3>
+            <h3 class="float-right text-muted">{{ request.session.dept_name }}：</h3>
+
+            <hr>
+            
+            <ul class="nav nav-pills" role="tablist">
+                <li><a href="/base/">首页</a></li>
+                <li class="active"><a href="/base/punch/">打卡</a></li>
+                <li><a href="/task/">任务中心</a></li>
+                <li><a href="/task/add/">添加任务</a></li>
+            </ul>
+
+            <hr>
+            
+            <input type="hidden" value="{{ time }}" name="now" id="now">
+
+            <div class="do">
+                <div class="clock" id="clock">
+                    <!-- 原点 -->
+                    <div class="origin"></div>
+                    
+                    <!-- 时分秒针 -->
+                    <div class="clock-line hour-line" id="hour-line"></div>
+                    <div class="clock-line minute-line" id="minute-line"></div>
+                    <div class="clock-line second-line" id="second-line"></div>
+                    
+                    <!-- 日期 -->
+                    <div class="date-info" id="date-info"></div>
+                    <!-- 时间 -->
+                    <div class="time-info" >
+                        <div class="time" id="hour-time"></div>
+                        <div class="time" id="minute-time"></div>
+                        <div class="time" id="second-time"></div>
+                    </div>
+                </div>
+
+                <div>
+                    {% if request.session.is_on_work %}
+                        <form action="/base/off_work/" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-lg float-right">下班打卡</button>
+                        </form>
+                    {% else %}
+                        <form action="/base/on_work/" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-lg float-right">上班打卡</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <hr>
+            <br>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">打卡历史记录</h3>
+                </div>
+                <table class="table">
+                    <th>日期</th> <th>上班时间</th> <th>下班时间</th>
+                    {% for att in atts %}
+                    <tr>
+                      <td>
+                        {{ att.date }}
+                      </td>
+                      <td>
+                        {{ att.on_work_time }}
+                      </td>
+                      <td>
+                        {{ att.off_work_time }}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                    
+                </table>
+            </div>
+            
+            
+            
+            
+        </div>
+    </div> <!-- /container -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>   
+    <script type='text/javascript' src="/static/base/js/punch.js"></script>
+</body>
+</html>
+
+
