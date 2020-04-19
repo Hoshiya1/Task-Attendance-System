@@ -7,4 +7,5 @@ urlpatterns = [
     path('punch/', views.punch, name='punch'),
     path('on_work/', views.on_work, name='on_work'),
     path('off_work/', views.off_work, name='off_work'),
+    path('report/', views.report, name='report'),
 ]

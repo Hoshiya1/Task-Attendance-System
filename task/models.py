@@ -14,8 +14,8 @@ class Task(models.Model):
     title = models.CharField(max_length=100)
     secret_lv = models.CharField(max_length=1, choices=gender)
     completed = models.BooleanField(default=False)
-    feel = models.TextField(null=True)
 
 class TaskDetail(models.Model):
     id = models.OneToOneField(Task, on_delete=models.CASCADE, db_column='id', primary_key=True)
     detail = models.TextField(null=True)
+    feel = models.TextField(null=True)

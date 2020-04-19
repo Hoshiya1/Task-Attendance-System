@@ -53,13 +53,13 @@ def do_edit(request):
         feel = request.POST.get('feel')
 
         task = Task.objects.filter(id=task_id).first()
+        task_detail = TaskDetail.objects.filter(id=task).first()
         task.title = title
         task.secret_lv = secret_lv
-        if feel:
-            task.feel = feel
         task.save()
 
-        task_detail = TaskDetail.objects.filter(id=task).first()
+        if feel:
+            task_detail.feel = feel
         task_detail.detail = detail
         task_detail.save()
         return redirect("/task/")
@@ -77,7 +77,9 @@ def do_complete(request):
         task_id = request.POST.get('task_id')
         feel = request.POST.get('feel')
         task = Task.objects.filter(id=task_id).first()
-        task.feel = feel
         task.completed = True
         task.save()
+        task_detail = TaskDetail.objects.filter(id=task).first()
+        task_detail.feel = feel
+        task_detail.save()
     return redirect("/")

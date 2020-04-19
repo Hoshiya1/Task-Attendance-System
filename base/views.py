@@ -22,7 +22,6 @@ def index(request):
 def punch(request):
     if not request.session.get('id', None):
         return redirect("/login/")
-    now = datetime.now()
     time = datetime.now().__format__('%Y-%m-%d %H:%M:%S')
     atts = Attendance.objects.filter(emp__id=request.session['id']).order_by('-id')
     return render(request, 'base/punch.html', {'request': request, 'time':time, 'atts':atts})
@@ -52,3 +51,34 @@ def off_work(request):
         att.save()
         request.session['is_on_work'] = False
     return redirect("/")
+
+def report(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        dept_id = request.POST.get('dept_id')
+        begin_date = request.POST.get('begin_date')
+        end_date = request.POST.get('end_date')
+        q_task = request.POST.get('q_task')
+        
+        if q_task:
+            tasks = Task.objects.filter(Q(date__gte=begin_date) & Q(date__lte=end_date)).filter(completed=True)
+            if name:
+                tasks = tasks.filter(emp__name=name)
+            if dept_id != 'all':
+                tasks = tasks.filter(emp__dept__id=dept_id)
+            items = tasks
+        else:
+            atts = Attendance.objects.filter(Q(date__gte=begin_date) & Q(date__lte=end_date))
+            if name:
+                atts = atts.filter(emp__name=name)
+            if dept_id != 'all':
+                atts = atts.filter(emp__dept__id=dept_id)
+            items = atts
+        print(q_task)
+            
+    depts = Dept.objects.filter().all()
+    today = datetime.now().__format__('%Y-%m-%d')
+    return render(request, 'base/report.html', locals())
+
+
+    
